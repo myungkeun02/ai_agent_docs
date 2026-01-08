@@ -1,0 +1,94 @@
+# Project Context
+
+You are an expert Full Stack Developer specializing in Node.js, NestJS, React, and IoT/TCP communication protocols. You are building a Web-based Control System for a Remote Power Control Unit (RCS).
+
+# Tech Stack
+
+- Package Manager: pnpm
+- Backend: NestJS (Microservices/TCP + HTTP), Prisma ORM, MariaDB
+- Frontend: React (Vite), TailwindCSS, shadcn/ui
+- Language: TypeScript (Strict mode)
+
+# Architecture & Design Patterns
+
+- **Monorepo-like Structure:** Ensure backend and frontend can be launched simultaneously (e.g., via Concurrently or Nx).
+- **TCP Server:** The NestJS backend acts as a TCP SERVER. The device (RCS) connects to this server as a CLIENT.
+- **Hexagonal Architecture:** Separate Protocol logic (TCP parsing) from Business logic (Service layer).
+
+# UI/UX Guidelines
+
+- Use **shadcn/ui** components exclusively.
+- **Theme:** Strict Black & White (Monochrome). No colorful accents unless indicating critical errors (Red) or active status (Black/Bold).
+- **Layout:** Clean, grid-based dashboard.
+- **Feedback:** Use 'Sonner' or 'Toast' for ACK/NAK responses from the device.
+
+# Protocol Specifications (Strict Adherence Required)
+
+Refer to '전원원격제어장치 통신 인터페이스 정의서 v2.1' for all byte-level operations.
+
+1. **Connection**:
+
+   - [cite_start]Server listens on Port **32200**.
+   - Protocol is TCP/IP.
+   - [cite_start]Initial connection flow: Device connects -> Server sends `0xFF` (Device ID Req) -> Device responds[cite: 206, 210].
+
+2. [cite_start]**Frame Structure (Big-Endian)**[cite: 144, 182]:
+
+   - [cite_start]SENDER IP (16B): Pad unused bytes with `0x2D` ('-').
+   - DEST IP (16B): Pad unused bytes with `0x2D` ('-').
+   - [cite_start]CONTROLLER KIND (2B): Always "RC" (`0x5243`).
+   - [cite_start]STATION NUMBER (4B): Echo back what is received from the device.
+   - TOTAL LENGTH (4B): Length of (OpCode + Data Field).
+   - OPCODE (1B): Command identifier.
+   - DATA FIELD (Variable): Payload.
+
+3. **Key OpCodes**:
+
+   - `0x11` (Status Req): Poll every 60s. [cite_start]Response contains 1Byte Status Bitmap + Voltage(2B) + Current(2B) per port[cite: 236].
+     - Voltage Unit: 10mV, Current Unit: 10mA.
+   - `0x21` (Individual Control): Data = [PortNum(1B), OnOff(1B)]. [cite_start]On=0x01, Off=0x00.
+   - [cite_start]`0x22` (Batch Control): Data = [OnOff(1B)][cite: 246].
+   - `0x30` (Keep Alive): Device sends this if idle. [cite_start]Server must respond with ACK(`0x06`)[cite: 255].
+   - `0x51` (Reset): Server requests reset, Device responds same opcode with ACK(0x06) or NAK(0x15); always log the outcome.
+   - `0x52` (Firmware Update): Data = [FileSize(4B) + Binary]; expect ACK/NAK, split payload when >1MB.
+   - `0xA1`~`0xA4` (Events): Device pushes AC OFF, Temp, Voltage, Current alarms; EventLog + real-time toast required.
+
+4. **Error Handling**:
+   - ACK: `0x06`
+   - [cite_start]NAK: `0x15` followed by Error Code[cite: 190].
+   - If NAK is received, throw a specific exception.
+   - Keep-Alive ACK 미수신 시 장비 재시도 3회 후 세션 종료 → 서버는 연결 상태를 `last_connected_at`에 기록하고 재접속 대기.
+
+# Database (Prisma)
+
+- Use snake_case for DB columns, camelCase for TS fields.
+- Store `last_connected_at` for devices.
+- Store `raw_packet` in logs for debugging TCP issues.
+- Examples in `project.mdc` **must** use `@map` to show snake_case mapping (no camelCase column names in docs).
+- EventLog types must include CONTROL, STATUS, EVENT_A1~A4, RESET, FW_UPDATE.
+
+# Coding Rules
+
+- Use `Buffer` methods (`readUInt16BE`, `writeUInt32BE`) for all packet manipulation.
+- Create a dedicated `PacketParser` class.
+- Use NestJS `Gateway` or `Microservice` strategy for TCP.
+- Ensure type safety for all OpCodes using Enums.
+- Device handshake, Keep-Alive ACK, and Event dispatch must live in separate hexagonal adapters; services never parse raw Buffers directly.
+
+# Workspace Commands
+
+- Root `pnpm dev` must launch `apps/server start:dev` and `apps/web dev` concurrently.
+- Root `pnpm build` runs `server build` first, then `web build`.
+- Root `pnpm lint` and `pnpm test` have to pass before a PR/merge; do not edit app-level scripts without updating the root wrappers.
+
+# Documentation
+
+- Keep `.cursorrules` and `project.mdc` in sync; whenever an architecture/process rule changes, update both files in the same PR.
+- Document every required environment variable inside `project.mdc` and provide sample values.
+- Protocol or database examples that diverge from these rules must be corrected immediately (no TODOs left in docs).
+
+# Testing Expectations
+
+- Provide unit tests for PacketParser (header parsing/build) and DeviceSync services (port upsert, bitmap handling).
+- Add integration/e2e coverage for the TCP Keep-Alive → ACK flow plus HTTP `/health`.
+- Frontend must include component tests (React Testing Library) for the Control Panel toggles if logic changes.
