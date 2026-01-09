@@ -10,82 +10,45 @@
 | 문서명 | Cursor AI Agent 사용 매뉴얼 |
 | 작성 목적 | AI Agent 기반 프로젝트 표준 개발 프로세스 정립 |
 | 대상 | 개발자 / 기획자 / 협업 인원 |
-| 작성일 | YYYY-MM-DD |
-| 버전 | v1.0 |
+| 작성일 | 2026-01-09 |
+| 버전 | v1.1 |
 
 ---
 
 ## 1️⃣ Cursor 실행 및 프로젝트 디렉토리 열기
 
-### 설명
 Cursor IDE를 실행한 뒤 작업할 프로젝트 디렉토리를 연다.  
 이 디렉토리는 Git 저장소 루트이거나 실제 개발이 이루어질 최상위 폴더여야 한다.
+<img width="2310" height="1221" alt="image" src="https://github.com/user-attachments/assets/d941b9cf-570f-4f43-9448-18403d0fd714" />
 
-### 📸 캡처 1-1
-**Cursor 실행 후 초기 화면**
-
-> [CAPTURE-1]  
-> Cursor 실행 직후 화면  
-> - Open Folder 버튼이 보이도록 캡처
-
-### 📸 캡처 1-2
 **프로젝트 디렉토리 선택**
+<img width="1894" height="1100" alt="image" src="https://github.com/user-attachments/assets/741bd8ef-cec6-48d5-b5ff-1a3f1047afd3" />
 
-> [CAPTURE-2]  
-> File → Open Folder 선택 후  
-> 프로젝트 디렉토리를 선택하는 화면
-
-### 체크 포인트
-- ❗ 다른 프로젝트가 열려 있지 않은지 확인
-- ❗ monorepo 환경에서는 실제 작업 루트 선택
 
 ---
 
 ## 2️⃣ 모델 설정 및 Agent 모드 진입
+
 ### (Cursor Rules / project.mdc 작성)
 
 ### 설명
 AI Agent가 프로젝트를 정확히 이해하도록  
 모델 선택 후 Agent 모드에서 프로젝트 규칙을 정의한다.
-
-### 📸 캡처 2-1
-**모델 선택 UI**
-
-> [CAPTURE-3]  
-> Cursor 상단 모델 선택 드롭다운  
-> - 선택된 모델명이 보이도록 캡처
-
-### 📸 캡처 2-2
-**Agent Mode 활성화**
-
-> [CAPTURE-4]  
-> Agent Mode가 활성화된 상태  
-> - 입력창 상단에 Agent 표시가 보이도록 캡처
+<img width="1193" height="943" alt="image" src="https://github.com/user-attachments/assets/193d5ba9-2a58-4478-b36b-006c3bda5e46" />
 
 ### 요청 프롬프트 예시
+<img width="1270" height="762" alt="image" src="https://github.com/user-attachments/assets/73d169cd-d4ea-4124-90e4-94c207dfba58" />
 
-```text
-이 프로젝트를 위한 cursor rules 와 project.mdc 파일을 작성해줘.
+보통 한번에 결과물이 잘 나오는 경우가 드물기에 프로젝트에 대한 질문을 AI에게 요청하는것이 좋음
+<img width="1271" height="781" alt="image" src="https://github.com/user-attachments/assets/45755604-e52d-4694-8ebd-dcec8ccfd755" />
 
-- 기술 스택
-- 디렉토리 구조
-- 네이밍 규칙
-- 커밋 메시지 규칙
-- 에러 처리 원칙
-- 테스트 전략
-- 문서화 기준
+프로젝트 세팅을 Cursor가 파일시스템에 직접 접근하여 진행하게 된다.
+<img width="1273" height="997" alt="image" src="https://github.com/user-attachments/assets/42930f32-7159-45eb-ae7b-0d449805d98f" />
 
-최대한 상세하게 작성해줘.
-```
 
-### 📸 캡처 2-3
 **Rules / project.mdc 생성 결과**
+<img width="2295" height="1297" alt="image" src="https://github.com/user-attachments/assets/7318932b-f041-4dd6-bc27-78136d450d77" />
 
-> [CAPTURE-5]  
-> `.cursorrules` 또는 `project.mdc` 파일이  
-> 프로젝트 트리에 생성된 화면
-
----
 
 ## 3️⃣ Plan 모드 전환 및 개발 계획 수립
 
@@ -93,18 +56,21 @@ AI Agent가 프로젝트를 정확히 이해하도록
 정의된 프로젝트 규칙을 기반으로  
 AI에게 개발 단계(Task)와 마일스톤 생성을 요청한다.
 
-### 📸 캡처 3-1
 **Plan Mode 전환**
+<img width="691" height="475" alt="image" src="https://github.com/user-attachments/assets/3a21d76b-aa80-4e32-93c4-25a8077a4460" />
 
-> [CAPTURE-6]  
-> Agent → Plan Mode 전환된 UI
+### 요청 프롬프트 예시
+<img width="918" height="268" alt="image" src="https://github.com/user-attachments/assets/081af485-ea4e-4a4b-9db1-83a0e5303695" />
+
+mdc. roles 생성과 동일하게 질문을 요청한다. Plan 모드에서는 질문에 의한 답변을 사용자가 선택하게끔 Questions를 제시해주는데 해당하는 사항을 선택하여 진행한다. (다른 요청사항을 추가하는것 또한 가능하다)
+<img width="936" height="455" alt="image" src="https://github.com/user-attachments/assets/c2d5a33e-cdc3-4b70-b0c2-cf66c1353cac" />
+<img width="1058" height="552" alt="image" src="https://github.com/user-attachments/assets/c5677120-c56e-4c8f-b368-482149fb1cbd" />
+
 
 ### 📸 캡처 3-2
 **개발 플랜(Task) 생성 결과**
 
-> [CAPTURE-7]  
-> - 단계별 Task 리스트  
-> - 파일/모듈 단위 계획이 보이도록 캡처
+<img width="2153" height="1256" alt="image" src="https://github.com/user-attachments/assets/9037ab66-5357-4e4a-8546-47f4caf1057f" />
 
 ### 운영 원칙
 - ❌ 모호한 답변 금지  
@@ -116,22 +82,13 @@ AI에게 개발 단계(Task)와 마일스톤 생성을 요청한다.
 
 ### 설명
 확정된 개발 계획을 기반으로  
-AI Agent에게 실제 개발 작업을 위임한다.
-
-### 📸 캡처 4-1
-**개발 위임 프롬프트 입력**
-
-> [CAPTURE-8]  
-> "위 계획에 따라 개발을 시작해줘"  
-> 프롬프트 입력 화면
+AI Agent에게 실제 개발 작업을 위임한다. Plan 상태에서 Build를 클릭하거나 Agent 모드로 전환해 플랜에 맞춰 로컬에서 작업할것을 요청한다.
+<img width="1190" height="1128" alt="image" src="https://github.com/user-attachments/assets/6475dd5d-f418-4b59-9f52-686cb5fc9d4c" />
 
 ### 📸 캡처 4-2
 **Agent 작업 진행 화면**
 
-> [CAPTURE-9]  
-> - 파일 생성  
-> - 코드 수정  
-> - 진행 로그가 보이는 상태
+<img width="909" height="567" alt="image" src="https://github.com/user-attachments/assets/fd1ac2ea-688a-4cbb-aa03-13a5622789ee" />
 
 ### 주의 사항
 - ❌ 전체 작업 일괄 위임  
@@ -139,111 +96,10 @@ AI Agent에게 실제 개발 작업을 위임한다.
 
 ---
 
-## 5️⃣ 작업 로그 파일 생성 및 기록
 
-### 설명
-AI 작업 이력을 추적하고  
-디버깅 및 유지보수를 위해 로그 문서를 관리한다.
 
-### 📸 캡처 5-1
-**로그 파일 생성**
-
-> [CAPTURE-10]  
-> `/docs/dev-log.md`  
-> 또는 `/docs/ai-work-log.md` 생성 화면
-
-### 로그 기록 예시
-
-~~~md
-## 2026-01-08
-- Task 1 완료
-- API 구조 수정
-- 예외 처리 로직 개선
-~~~
-
-### 📸 캡처 5-2
-**로그 누적 상태**
-
-> [CAPTURE-11]  
-> 실제 로그가 누적된 문서 화면
-
----
-
-## 6️⃣ 디버깅 · 문서 보완 · 커밋 & 푸시
-
-### 설명
-개발 완료 후 디버깅과 문서화를 병행하며  
-일관된 커밋 전략으로 저장소를 관리한다.
-
-### 📸 캡처 6-1
-**디버깅 문서 업데이트**
-
-> [CAPTURE-12]  
-> `/docs/debug.md` 수정 화면
-
-### 📸 캡처 6-2
-**커밋 메시지 작성**
-
-> [CAPTURE-13]  
-> git commit 메시지 입력 화면
-
-### 커밋 메시지 규칙 예시
-
-~~~text
-feat: 로그인 API 구현
-fix: null pointer 예외 처리
-docs: dev-log 업데이트
-~~~
-
----
-
-## 7️⃣ 커밋 & 푸시 전략 (권장)
-
-### 기본 원칙
-- 기능 단위 커밋
-- 문서 변경은 docs 커밋으로 분리
-- AI 작업 결과도 반드시 커밋 로그에 남김
-
-### 권장 브랜치 전략
-- main / master : 배포
-- develop : 통합
-- feature/* : 기능 개발
-
----
-
-## 📌 전체 프로세스 요약
-
-~~~text
-Open Folder
- → Agent + Rules 정의
- → Plan 수립
- → Agent 실행
- → 로그 기록
- → 디버깅 & 문서화
- → 커밋 & 푸시
-~~~
-
----
-
-## ✅ 실무 보완 권장 항목 (옵션)
-
-- ☐ 중간 리팩토링 리뷰 단계
-- ☐ 테스트 전용 Phase 분리
-- ☐ 배포 / 롤백 문서 추가
-- ☐ AI 응답 품질 리뷰 체크리스트
-
----
-
-## 📎 부록
-
-### A. 권장 문서 목록
-- README.md
 - project.mdc
 - .cursorrules
-- docs/dev-log.md
-- docs/debug.md
-- docs/architecture.md
-- docs/commit-strategy.md
 
 ---
 
