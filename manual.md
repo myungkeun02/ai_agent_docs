@@ -94,8 +94,16 @@ AI Agent에게 실제 개발 작업을 위임한다. Plan 상태에서 Build를 
 - ❌ 전체 작업 일괄 위임  
 - ✅ Task 단위 순차 진행
 
----
+## 4 디버깅 및 기능 추가
 
+처음부터 완벽한 프로덕트가 생성되지 않으니 발생하는 에러 Alret를 그대로 복사하여 전달한다.
+<img width="2169" height="1345" alt="image" src="https://github.com/user-attachments/assets/3c27888e-7e70-4959-b26c-914b9c0de9d3" />
+
+고쳐내라고 한다.
+<img width="832" height="353" alt="image" src="https://github.com/user-attachments/assets/3a67a7f1-787f-4201-8862-8881649feb12" />
+
+고쳐냄
+<img width="2096" height="1094" alt="image" src="https://github.com/user-attachments/assets/c9f597e8-ea1d-4a5c-a5d5-1779f733bf7c" />
 
 
 - project.mdc
